@@ -556,7 +556,7 @@ double GravitationalAdvectionField::getDivergence(const Vector3d &position) cons
 }
 
 double GravitationalAdvectionField::getV(const double &r) const {
-	double f = pow(6.6743 * pow(10., -11.) * M / r, 0.5);
+	double f = -pow(6.6743 * pow(10., -11.) * M / r, 0.5);
 	return f;
 }
 
