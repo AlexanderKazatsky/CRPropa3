@@ -286,6 +286,42 @@ public:
 	std::string getDescription() const;
 };
 
+/**
+ @class GravitationalAdvectionField
+ @brief Spherical gravitational advection.
+*/
+
+class GravitationalAdvectionField: public AdvectionField {
+	Vector3d origin; //origin of the advection sphere
+	double radius; //radius of the advection sphere
+	double vMax; // maximum wind velocity
+	double M; // mass of the central black hole
+public:
+	/** Constructor
+	@param origin 	Origin of the advection sphere
+	@param radius 	Radius of the advection sphere
+	@param vMax	Maximum wind velocity
+	@param M	Mass of the central black hole
+*/
+	GravitationalAdvectionField(const Vector3d origin, double radius, double vMax, double M);
+	Vector3d getField(const Vector3d &position) const;
+	double getDivergence(const Vector3d &position) const;
+
+	double getV(const double &r) const;
+
+	void setOrigin(const Vector3d origin);
+	void setRadius(double radius);
+	void setVMax(double vMax);
+	void setMass(double M);
+
+	Vector3d getOrigin() const;
+	double getRadius() const;
+	double getVMax() const;
+	double getMass() const;
+	
+	std::string getDescription() const;
+};
+
 } // namespace crpropa
 
 #endif // CRPROPA_ADVECTIONFIELD_H

@@ -531,4 +531,78 @@ std::string SphericalAdvectionShock::getDescription() const {
 	return s.str();
 }
 
+
+//----------------------------------------------------------------
+
+GravitationalAdvectionField::GravitationalAdvectionField(const Vector3d origin, double radius, double vMax, double M) {
+	setOrigin(origin);
+	setRadius(radius);
+	setVMax(vMax);
+	setMass(M);
+}
+
+Vector3d GravitationalAdvectionField::getField(const Vector3d &position) const {
+	Vector3d Pos = position-origin;
+	double R = Pos.getR();
+	if (R>radius) {
+		return Vector3d(0.);
+	}
+	double v_R = getV(R);
+	return v_R * Pos.getUnitVector();
+}
+
+double GravitationalAdvectionField::getDivergence(const Vector3d &position) const {
+	return 0;
+}
+
+double GravitationalAdvectionField::getV(const double &r) const {
+	double f = pow(6.6743 * pow(10., -11.) * M / r, 0.5);
+	return f;
+}
+
+void GravitationalAdvectionField::setOrigin(const Vector3d o) {
+	origin = o;
+	return;
+}
+
+void GravitationalAdvectionField::setRadius(double r) {
+	radius = r;
+	return;
+}
+
+void GravitationalAdvectionField::setVMax(double v) {
+	vMax = v;
+	return;
+}
+
+void GravitationalAdvectionField::setMass(double M) {
+	M = M;
+	return;
+}
+
+Vector3d GravitationalAdvectionField::getOrigin() const {
+	return origin;
+}
+
+double GravitationalAdvectionField::getRadius() const {
+	return radius;
+}
+
+double GravitationalAdvectionField::getVMax() const {
+	return vMax;
+}
+
+double GravitationalAdvectionField::getMass() const {
+	return M;
+}
+
+std::string GravitationalAdvectionField::getDescription() const {
+	std::stringstream s;
+	s << "Origin: " << origin / kpc  << " kpc, ";
+	s << "Radius: " << radius / kpc  << " kpc, ";
+	s << "vMax: " << vMax / km * sec << " km/s, ";
+	s << "Mass: " << M << "kg \n";
+	return s.str();
+}
+
 } // namespace crpropa

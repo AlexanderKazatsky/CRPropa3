@@ -348,4 +348,26 @@ std::string ObserverSurface::getDescription() const {
 	return ss.str();
 }
 
+// ObserverPlasmoid
+ObserverPlasmoid::ObserverPlasmoid(Surface* _surface) : surface(_surface) {
+
+}
+
+DetectionState ObserverPlasmoid::checkDetection(Candidate *candidate) const
+{
+        double currentDistance = surface -> distance(candidate -> current.getPosition());
+        candidate -> limitNextStep(fabs(currentDistance));
+
+        if (currentDistance >= 0.)
+            return DETECTED;
+        else
+            return NOTHING;
+}
+
+std::string ObserverPlasmoid::getDescription() const {
+    std::stringstream ss;
+    ss << "Special observer for plasmoid scenarios; Detects all particles, that are leaving the system over the predefined surface of a" << surface ->getDescription()<< "to overcome overshooting.";
+    return ss.str();
+}
+
 } // namespace crpropa

@@ -205,14 +205,14 @@ public:
  @brief Position of a point source
  */
 class SourcePosition: public SourceFeature {
-	Vector3d position; 
+	Vector3d position;
 public:
 	/** Constructor for a source in 3D
 	 @param position	vector containing the coordinates of the point source [in meters]
 	 */
 	SourcePosition(Vector3d position);
 	/** Constructor for a source in 1D
-	 @param d	distance of the point source to the observer at x = 0 [in meters]; 
+	 @param d	distance of the point source to the observer at x = 0 [in meters];
 	 			internally this will be converted to a vector with x-coordinate equal to d
 	 */
 	SourcePosition(double d);
@@ -320,12 +320,12 @@ public:
 
 /**
  @class SourceUniformCylinder
- @brief Uniform distribution of source positions inside the volume of a cylinder whose axis is along the z-axis. 
+ @brief Uniform distribution of source positions inside the volume of a cylinder whose axis is along the z-axis.
 
  The circle of the cylinder lays in the xy-plane and the height is along the z-axis.
  */
 class SourceUniformCylinder: public SourceFeature {
-	Vector3d origin;	// central point of cylinder 
+	Vector3d origin;	// central point of cylinder
 	double height;		// total height of the cylinder along z-axis. Half over/under the center.
 	double radius;		// radius of the cylinder in the xy-plane
 public:
@@ -339,12 +339,34 @@ public:
 	void setDescription();
 };
 
+/**
+ @class SourceUniformDisk
+ @brief Uniform distribution of source positions inside the volume of a disk whose axis is along the z-axis.
+
+ The circle of the disk lays in the xy-plane and the height is along the z-axis.
+ */
+class SourceUniformDisk: public SourceFeature {
+	Vector3d origin;	// central point of disk
+	double height;		// total height of the cdisk along z-axis. Half over/under the center.
+	double radius;		// outer radius of the disk in the xy-plane
+	double r_min; 		// inner radius of the disk in the xy-plane
+public:
+	/** Constructor
+	 @param origin	vector corresponding to the center of the disk axis
+	 @param height	height of the disk, half lays over the origin, half is lower
+	 @param radius	outer radius of the disk
+	 @param r_min 	inner radius of the disk
+	 */
+	SourceUniformDisk(Vector3d origin, double height, double radius, double r_min);
+	void prepareParticle(ParticleState &particle) const;
+	void setDescription();
+};
 
 /**
  @class SourceSNRDistribution
  @brief Source distribution that follows the Galactic SNR distribution in 2D
 
- The origin of the distribution is the Galactic center. The default maximum radius is set 
+ The origin of the distribution is the Galactic center. The default maximum radius is set
  to rMax=20 kpc and the default maximum height is zMax = 5 kpc.
  See G. Case and D. Bhattacharya (1996) for the details of the distribution.
  */
@@ -355,13 +377,13 @@ class SourceSNRDistribution: public SourceFeature {
 	double zg; // exponential cut parameter in z direction
 	double frMax; // helper for efficient sampling
 	double fzMax; // helper for efficient sampling
-	double rMax; // maximum radial distance - default 20 kpc 
+	double rMax; // maximum radial distance - default 20 kpc
 		      // (due to the extension of the JF12 field)
 	double zMax; // maximum distance from galactic plane - default 5 kpc
-	void setFrMax(); // calculate frMax with the current parameter. 
+	void setFrMax(); // calculate frMax with the current parameter.
 
 public:
-	/** Default constructor. 
+	/** Default constructor.
 	 Default parameters are:
 	 . rEarth = 8.5 kpc
 	 . alpha = 2
@@ -369,14 +391,14 @@ public:
 	 . zg = 300 pc
 	 . rMax = 20 kpc
 	 . zMax = 5 kpc
-	*/ 
+	*/
 	SourceSNRDistribution();
 	/** Generic constructor
 	 @param rEarth	  distance from Earth to the Galactic centre [in meters]
 	 @param alpha	  parameter that shifts radially the maximum of the distributions
-	 @param beta	  parameter that shifts radially the maximum of the distributions 
+	 @param beta	  parameter that shifts radially the maximum of the distributions
 	 @param zg		  exponential cut-off parameter in the z-direction [in meters]
-	*/	
+	*/
 	SourceSNRDistribution(double rEarth,double alpha, double beta, double zg);
 
 	void prepareParticle(ParticleState &particle) const;
@@ -428,7 +450,7 @@ public:
  A logarithmic spiral with four arms is used for the radial distribution.
  The z-distribution is a simple exponentially decaying distribution.
  The pulsar distribution is explained in detail in C.-A. Faucher-Giguere
- and V. M. Kaspi, ApJ 643 (May, 2006) 332. The radial distribution is 
+ and V. M. Kaspi, ApJ 643 (May, 2006) 332. The radial distribution is
  parametrized as in Blasi and Amato, JCAP 1 (Jan., 2012) 10.
  */
 class SourcePulsarDistribution: public SourceFeature {
@@ -437,12 +459,12 @@ class SourcePulsarDistribution: public SourceFeature {
 	double zg; // exponential cut parameter in z direction
 	double frMax; // helper for efficient sampling
 	double fzMax; // helper for efficient sampling
-	double rMax; // maximum radial distance - default 22 kpc 
+	double rMax; // maximum radial distance - default 22 kpc
 	double zMax; // maximum distance from galactic plane - default 5 kpc
 	double rBlur; // relative smearing factor for the radius
 	double thetaBlur; // smearing factor for the angle. Unit = [1/length]
 public:
-	/** Default constructor. 
+	/** Default constructor.
 	 Default parameters are:
 	 . rEarth = 8.5 kpc
 	 . beta = 3.53
@@ -451,19 +473,19 @@ public:
 	 . Zmax = 5 kpc
 	 . rBlur = 0.07
 	 . thetaBlur = 0.35 / kpc
-	 */ 
-	SourcePulsarDistribution();	
+	 */
+	SourcePulsarDistribution();
 	/** Generic constructor
 	 @param rEarth		distance from Earth to the Galactic centre [in meters]
-	 @param beta		parameter that shifts radially the maximum of the distributions 
+	 @param beta		parameter that shifts radially the maximum of the distributions
 	 @param zg			exponential cut-off parameter in the z-direction [in meters]
 	 @param rBlur		relative smearing factor for radius
 	 @param thetaBlur	smearing factor for the angle [in 1 / meters]
-	 */	
+	 */
 	SourcePulsarDistribution(double rEarth, double beta, double zg, double rBlur, double thetaBlur);
 	void prepareParticle(ParticleState &particle) const;
 
-	/** 
+	/**
 	 radial distribution of pulsars
 	 @param r	galactocentric radius
 	*/
@@ -497,7 +519,7 @@ public:
  @brief Uniform source distribution in 1D
 
  This source property sets random x-coordinates according to a uniform source
- distribution in a given distance interval. If cosmological effects are included, 
+ distribution in a given distance interval. If cosmological effects are included,
  this is done by drawing a light-travel distance from a flat distribution and
  converting to a comoving distance. In the absence of cosmological effects, the
  positions are drawn uniformly in the light-travel distance interval (as opposed
@@ -569,8 +591,8 @@ public:
 
 /**
  @class SourceDirectedEmission
- @brief Directed emission from a source from the von-Mises-Fisher distribution 
- 
+ @brief Directed emission from a source from the von-Mises-Fisher distribution
+
  The emission from the source is generated following the von-Mises-Fisher distribution
  with mean direction mu and concentration parameter kappa.
  The sampling from the vMF distribution follows this document by Julian Straub:
@@ -635,10 +657,10 @@ public:
 
 /**
  @class SourceEmissionMap
- @brief Deactivate Candidate if it has zero probability in provided EmissionMap. 
+ @brief Deactivate Candidate if it has zero probability in provided EmissionMap.
 
 	This feature does not change the direction of the candidate. Therefore a usefull direction feature (isotropic or directed emission)
-	must be added to the sources before. The propability of the emission map is not taken into account. 
+	must be added to the sources before. The propability of the emission map is not taken into account.
  */
 class SourceEmissionMap: public SourceFeature {
 	ref_ptr<EmissionMap> emissionMap;
@@ -662,7 +684,7 @@ class SourceEmissionCone: public SourceFeature {
 	double aperture;
 public:
 	/** Constructor
-	 @param direction		Vector3d corresponding to the cone axis 
+	 @param direction		Vector3d corresponding to the cone axis
 	 @param aperture		opening angle of the cone
 	 */
 	SourceEmissionCone(Vector3d direction, double aperture);
@@ -681,11 +703,11 @@ public:
  @brief Emission of particles at a specific redshift (or time)
 
  The redshift coordinate is used to treat cosmological effects and as a time coordinate.
- Consider, for instance, a source located at a distance corresponding to a redshift z. 
+ Consider, for instance, a source located at a distance corresponding to a redshift z.
  In the absence of processes that cause time delays (e.g., magnetic deflections), particles
- from this source could arrive after a time corresponding to the source redshift. Charged 
+ from this source could arrive after a time corresponding to the source redshift. Charged
  particles, on the other hand, can arrive at a time later than the corresponding straight-
- line travel duration. 
+ line travel duration.
  This treatment is also useful for time-dependent studies (e.g. transient sources).
  */
 class SourceRedshift: public SourceFeature {
@@ -707,11 +729,11 @@ public:
  This function assigns random redshifts to the particles emitted by a given source.
  These values are drawn from a uniform redshift distribution in the interval [zmin, zmax].
  The redshift coordinate is used to treat cosmological effects and as a time coordinate.
- Consider, for instance, a source located at a distance corresponding to a redshift z. 
+ Consider, for instance, a source located at a distance corresponding to a redshift z.
  In the absence of processes that cause time delays (e.g., magnetic deflections), particles
- from this source could arrive after a time corresponding to the source redshift. Charged 
+ from this source could arrive after a time corresponding to the source redshift. Charged
  particles, on the other hand, can arrive at a time later than the corresponding straight-
- line travel duration. 
+ line travel duration.
  This treatment is also useful for time-dependent studies (e.g. transient sources).
  */
 class SourceUniformRedshift: public SourceFeature {
@@ -733,11 +755,11 @@ public:
 
  This assigns redshifts to a given source according to a typical power-law distribution.
  The redshift coordinate is used to treat cosmological effects and as a time coordinate.
- Consider, for instance, a source located at a distance corresponding to a redshift z. 
+ Consider, for instance, a source located at a distance corresponding to a redshift z.
  In the absence of processes that cause time delays (e.g., magnetic deflections), particles
- from this source could arrive after a time corresponding to the source redshift. Charged 
+ from this source could arrive after a time corresponding to the source redshift. Charged
  particles, on the other hand, can arrive at a time later than the corresponding straight-
- line travel duration. 
+ line travel duration.
  This treatment is also useful for time-dependent studies (e.g. transient sources).
  */
 class SourceRedshiftEvolution: public SourceFeature {
@@ -758,8 +780,8 @@ public:
  @class SourceRedshift1D
  @brief Redshift according to the distance to 0
 
- This source property sets the redshift according to the distance from 
- the source to the origin (0, 0, 0). 
+ This source property sets the redshift according to the distance from
+ the source to the origin (0, 0, 0).
  It must be added after the position of the source is set because it
  computes the redshifts based on the source distance.
  */
@@ -778,8 +800,8 @@ public:
  @class SourceGenericComposition
  @brief Add multiple cosmic rays with energies described by an expression string
 
- This is particularly useful if an arbitrary combination of nuclei types with 
- specific energy spectra. The strings parsed may contain 'A' (atomic mass), 
+ This is particularly useful if an arbitrary combination of nuclei types with
+ specific energy spectra. The strings parsed may contain 'A' (atomic mass),
  'Z' (atomic number).  The following units are recognized as part of the strings:
  GeV, TeV, PeV, EeV.  The variable for energy is 'E', with limits 'Emin', 'Emax'.
  This property only works if muparser is available.
@@ -836,9 +858,9 @@ protected:
 /**
  * @class SourceTag
  * @brief All candidates from this source get a given tag. This can be used to distinguish between different sources that follow the same spatial distribution
- * 
- * Sets the tag of the candidate. Can be used to trace back additional candidate properties, e.g. production interaction or source type. 
- * The interaction overwrites the candidate tag from the source for all secondaries. 
+ *
+ * Sets the tag of the candidate. Can be used to trace back additional candidate properties, e.g. production interaction or source type.
+ * The interaction overwrites the candidate tag from the source for all secondaries.
  */
 
 class SourceTag: public SourceFeature {
@@ -856,23 +878,23 @@ public:
 	@class SourceMassDistribution
 	@brief	Source position follows a given mass distribution
 
-	The (source)position of the candidate is sampled from a given mass distribution. The distribution uses the getDensity function of the density module. 
+	The (source)position of the candidate is sampled from a given mass distribution. The distribution uses the getDensity function of the density module.
 	If a weighting for different components is desired, the use of different densities in a densityList is recommended.
 
 	The sampling range of the position can be restricted. Default is a sampling for x in [-20, 20] * kpc, y in [-20, 20] * kpc and z in [-4, 4] * kpc.
 */
 class SourceMassDistribution: public SourceFeature {
-private: 
+private:
 	ref_ptr<Density> density;	//< density distribution
 	double maxDensity; 			//< maximal value of the density in the region of interest
 	double xMin, xMax;			//< x-range to sample positions
 	double yMin, yMax; 			//< y-range to sample positions
 	double zMin, zMax;			//< z-range to sample positions
-	int maxTries = 10000;		//< maximal number of tries to sample the position 
+	int maxTries = 10000;		//< maximal number of tries to sample the position
 
-public: 
+public:
 	/** Constructor
-	@param density: CRPropa mass distribution 
+	@param density: CRPropa mass distribution
 	@param maxDensity:	maximal density in the region where the position should be sampled
 	@param x:	the position will be sampled in the range [-x, x]. Non symmetric values can be set with setXrange.
 	@param y:	the position will be sampled in the range [-y, y]. Non symmetric values can be set with setYrange.

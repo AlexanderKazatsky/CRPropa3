@@ -361,6 +361,28 @@ void SourceUniformCylinder::setDescription() {
 }
 
 // ---------------------------------------------------------------------------
+SourceUniformDisk::SourceUniformDisk(Vector3d origin, double height, double radius, double r_min) :
+    origin(origin), height(height), radius(radius), r_min(r_min) {
+}
+
+void SourceUniformDisk::prepareParticle(ParticleState& particle) const {
+  Random &random = Random::instance();
+  double phi = 2*M_PI*random.rand();
+  double RandRadius = r_min + (radius - r_min)*pow(random.rand(), 1. / 2.);
+  Vector3d pos(cos(phi)*RandRadius, sin(phi)*RandRadius, (-0.5+random.rand())*height);
+  particle.setPosition(pos + origin);
+  }
+
+void SourceUniformDisk::setDescription() {
+	std::stringstream ss;
+	ss << "SourceUniformDisk: Random uniform position in disk with ";
+	ss << "origin = " << origin / Mpc << " Mpc and ";
+	ss << "radius = " << radius / Mpc << " Mpc and";
+	ss << "height = " << height / Mpc << " Mpc\n";
+	description = ss.str();
+}
+
+// ---------------------------------------------------------------------------
 SourceSNRDistribution::SourceSNRDistribution() :
     rEarth(8.5 * kpc), beta(3.53), zg(0.3 * kpc) {
 	setAlpha(2.);
@@ -845,7 +867,7 @@ SourceEmissionCone::SourceEmissionCone(Vector3d direction, double aperture) :
 	aperture(aperture) {
 	setDirection(direction);
 	setDescription();
-	
+
 }
 
 void SourceEmissionCone::prepareParticle(ParticleState& particle) const {
@@ -1058,7 +1080,7 @@ void SourceTag::setTag(std::string tag) {
 
 // ----------------------------------------------------------------------------
 
-SourceMassDistribution::SourceMassDistribution(ref_ptr<Density> density, double max, double x, double y, double z) : 
+SourceMassDistribution::SourceMassDistribution(ref_ptr<Density> density, double max, double x, double y, double z) :
 	density(density), maxDensity(max), xMin(-x), xMax(x), yMin(-y), yMax(y), zMin(-z), zMax(z) {}
 
 void SourceMassDistribution::setMaximalDensity(double maxDensity) {
@@ -1097,7 +1119,7 @@ void SourceMassDistribution::setZrange(double zMin, double zMax) {
 }
 
 Vector3d SourceMassDistribution::samplePosition() const {
-	Vector3d pos; 
+	Vector3d pos;
 	Random &rand = Random::instance();
 
 	for (int i = 0; i < maxTries; i++) {
@@ -1111,10 +1133,10 @@ Vector3d SourceMassDistribution::samplePosition() const {
 			return pos;
 		}
 	}
-	KISS_LOG_WARNING << "SourceMassDistribution: sampling a position was not possible within " 
+	KISS_LOG_WARNING << "SourceMassDistribution: sampling a position was not possible within "
 		<< maxTries << " tries. Please check the maximum density or increse the number of maximal tries. \n";
 	return Vector3d(0.);
-}	
+}
 
 void SourceMassDistribution::prepareParticle(ParticleState &state) const {
 	Vector3d pos = samplePosition();

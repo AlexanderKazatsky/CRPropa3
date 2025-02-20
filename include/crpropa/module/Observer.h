@@ -268,6 +268,19 @@ public:
 	DetectionState checkDetection(Candidate *candidate) const;
 	std::string getDescription() const;
 };
+
+/**
+ @class ObserverPlasmoid
+ @brief Detects particles crossing the surface from the inside. Useful for AGN-jet simulations, speeds up computation due to possible geometry bug
+*/
+class ObserverPlasmoid: public ObserverFeature {
+private:
+	ref_ptr<Surface> surface;
+public:
+	ObserverPlasmoid(Surface* surface);
+	DetectionState checkDetection(Candidate *candidate) const;
+	std::string getDescription() const;
+};
 /** @} */
 
 }
