@@ -3,6 +3,7 @@
 
 #include "crpropa/Module.h"
 #include "crpropa/PhotonBackground.h"
+#include "crpropa/Vector3.h"
 
 #include <vector>
 
@@ -150,8 +151,9 @@ public:
 	 * @param gamma 	Lorentz factor of the nucleon
 	 * @param z 		redshift
 	 * @param onProton 	true for protons, false for neutrons
+	 * @param pos 		position of the nucleon
 	 */
-	double nucleonMFP(double gamma, double z, bool onProton) const;
+	double nucleonMFP(double gamma, double z, bool onProton, Vector3d pos = Vector3d(0, 0, 0)) const;
 
 	/** scaling factor for mean free path of the nucleus (converting the MFP of a single nucleon)
 	 * 
@@ -169,7 +171,7 @@ public:
 	 @param gamma	Lorentz factor of particle
 	 @param z		redshift
 	 */
-	double lossLength(int id, double gamma, double z = 0);
+	double lossLength(int id, double gamma, double z = 0, Vector3d pos = Vector3d(0, 0, 0)) const;
 
 	/**
 	 Direct SOPHIA interface.

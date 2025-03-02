@@ -95,6 +95,7 @@ void EMDoublePairProduction::process(Candidate *candidate) const {
 
 	// scale the electron energy instead of background photons
 	double z = candidate->getRedshift();
+	Vector3d pos = candidate->current.getPosition();
 	double E = (1 + z) * candidate->current.getEnergy();
 
 	// check if in tabulated energy range
@@ -103,7 +104,7 @@ void EMDoublePairProduction::process(Candidate *candidate) const {
 
 	// interaction rate
 	double rate = interpolate(E, tabEnergy, tabRate);
-	rate *= pow_integer<2>(1 + z) * photonField->getRedshiftScaling(z);
+	rate *= pow_integer<2>(1 + z) * photonField->getRedshiftScaling(z) * photonField->getSpaceScaling(pos);
 
 	// check for interaction
 	Random &random = Random::instance();

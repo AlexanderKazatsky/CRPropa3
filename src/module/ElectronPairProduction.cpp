@@ -83,7 +83,7 @@ void ElectronPairProduction::initSpectrum(std::string filename) {
 	infile.close();
 }
 
-double ElectronPairProduction::lossLength(int id, double lf, double z) const {
+double ElectronPairProduction::lossLength(int id, double lf, double z, Vector3d pos) const {
 	double Z = chargeNumber(id);
 	if (Z == 0)
 		return std::numeric_limits<double>::max(); // no pair production on uncharged particles
@@ -92,7 +92,7 @@ double ElectronPairProduction::lossLength(int id, double lf, double z) const {
 	if (lf < tabLorentzFactor.front())
 		return std::numeric_limits<double>::max(); // below energy threshold
 
-	double rate;
+	double rate = photonField->getSpaceScaling(pos);
 	if (lf < tabLorentzFactor.back())
 		rate = interpolate(lf, tabLorentzFactor, tabLossRate); // interpolation
 	else
@@ -110,7 +110,8 @@ void ElectronPairProduction::process(Candidate *c) const {
 
 	double lf = c->current.getLorentzFactor();
 	double z = c->getRedshift();
-	double losslen = lossLength(id, lf, z);  // energy loss length
+	Vector3d pos = c->current.getPosition();
+	double losslen = lossLength(id, lf, z, pos);  // energy loss length
 	if (losslen >= std::numeric_limits<double>::max())
 		return;
 

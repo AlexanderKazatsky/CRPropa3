@@ -211,6 +211,7 @@ void EMInverseComptonScattering::process(Candidate *candidate) const {
 
 	// scale the particle energy instead of background photons
 	double z = candidate->getRedshift();
+	Vector3d pos = candidate->current.getPosition();
 	double E = candidate->current.getEnergy() * (1 + z);
 
 	if (E < tabEnergy.front() or (E > tabEnergy.back()))
@@ -218,7 +219,7 @@ void EMInverseComptonScattering::process(Candidate *candidate) const {
 
 	// interaction rate
 	double rate = interpolate(E, tabEnergy, tabRate);
-	rate *= pow_integer<2>(1 + z) * photonField->getRedshiftScaling(z);
+	rate *= pow_integer<2>(1 + z) * photonField->getRedshiftScaling(z) * photonField->getSpaceScaling(pos);
 
 	// run this loop at least once to limit the step size
 	double step = candidate->getCurrentStep();
