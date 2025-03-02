@@ -14,13 +14,16 @@ namespace crpropa {
 TabularPhotonField::TabularPhotonField(std::string fieldName, bool isRedshiftDependent) {
 	this->fieldName = fieldName;
 	this->isRedshiftDependent = isRedshiftDependent;
+	this->isSpaceDependent = false;
 
 	readPhotonEnergy(getDataPath("") + "Scaling/" + this->fieldName + "_photonEnergy.txt");
 	readPhotonDensity(getDataPath("") + "Scaling/" + this->fieldName + "_photonDensity.txt");
 	if (this->isRedshiftDependent)
 		readRedshift(getDataPath("") + "Scaling/" + this->fieldName + "_redshift.txt");
+	if (this->isSpaceDependent)
+		readSpaceScaling(getDataPath("") + "Scaling/" + this->fieldName + "_space.txt");
 
-	checkInputData();
+		checkInputData();
 
 	if (this->isRedshiftDependent)
 		initRedshiftScaling();

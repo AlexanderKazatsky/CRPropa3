@@ -22,6 +22,7 @@ public:
 	PhotonField() {
 		this->fieldName = "AbstractPhotonField";
 		this->isRedshiftDependent = false;
+		this->isSpaceDependent = false;
 	}
 
 	/**
@@ -50,6 +51,14 @@ public:
 		return this->isRedshiftDependent;
 	}
 
+	bool hasSpaceDependence() const {
+		return this->isSpaceDependent;
+	}
+
+	virtual double getSpaceScaling(Vector3d pos) const {
+		return 1.;
+	}
+
 	void setFieldName(std::string fieldName) {
 		this->fieldName = fieldName;
 	}
@@ -57,6 +66,7 @@ public:
 protected:
 	std::string fieldName;
 	bool isRedshiftDependent;
+	bool isSpaceDependent;
 };
 
 /**
