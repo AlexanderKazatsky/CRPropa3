@@ -20,9 +20,7 @@ TabularPhotonField::TabularPhotonField(std::string fieldName, bool isRedshiftDep
 	readPhotonDensity(getDataPath("") + "Scaling/" + this->fieldName + "_photonDensity.txt");
 	if (this->isRedshiftDependent)
 		readRedshift(getDataPath("") + "Scaling/" + this->fieldName + "_redshift.txt");
-	if (this->isSpaceDependent)
-		readSpaceScaling(getDataPath("") + "Scaling/" + this->fieldName + "_space.txt");
-
+		
 		checkInputData();
 
 	if (this->isRedshiftDependent)

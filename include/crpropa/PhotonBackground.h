@@ -3,6 +3,7 @@
 
 #include "crpropa/Common.h"
 #include "crpropa/Referenced.h"
+#include "crpropa/Vector3.h"
 
 #include <vector>
 #include <string>
