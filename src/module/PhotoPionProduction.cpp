@@ -417,7 +417,7 @@ double PhotoPionProduction::sampleEps(bool onProton, double E, double z) const {
 	// sample eps between epsMin ... epsMax
 	double Ein = E / GeV;
 	double epsMin = std::max(photonField -> getMinimumPhotonEnergy(z) / eV, epsMinInteraction(onProton, Ein));
-	double epsMax = photonField -> getMaximumPhotonEnergy(z) / eV;
+	double epsMax = std::min(photonField -> getMaximumPhotonEnergy(z) / eV, std::max(photonField -> getMinimumPhotonEnergy(z) / eV, epsMinInteraction(onProton, Ein)) * 1000);
 	double pEpsMax = probEpsMax(onProton, Ein, z, epsMin, epsMax);
 
 	Random &random = Random::instance();
