@@ -3,6 +3,8 @@
 
 #include "crpropa/Common.h"
 #include "crpropa/Referenced.h"
+#include "crpropa/Vector3.h"
+#include "crpropa/Units.h"
 
 #include <vector>
 #include <string>
@@ -22,6 +24,7 @@ public:
 	PhotonField() {
 		this->fieldName = "AbstractPhotonField";
 		this->isRedshiftDependent = false;
+		this->isSpaceDependent = false;
 	}
 
 	/**
@@ -50,6 +53,14 @@ public:
 		return this->isRedshiftDependent;
 	}
 
+	bool hasSpaceDependence() const {
+		return this->isSpaceDependent;
+	}
+
+	virtual double getSpaceScaling(Vector3d pos) const {
+		return 1.;
+	}
+
 	void setFieldName(std::string fieldName) {
 		this->fieldName = fieldName;
 	}
@@ -57,6 +68,7 @@ public:
 protected:
 	std::string fieldName;
 	bool isRedshiftDependent;
+	bool isSpaceDependent;
 };
 
 /**
@@ -70,7 +82,7 @@ protected:
  */
 class TabularPhotonField: public PhotonField {
 public:
-	TabularPhotonField(const std::string fieldName, const bool isRedshiftDependent = true);
+	TabularPhotonField(const std::string fieldName, const bool isRedshiftDependent = true, const bool isSpaceDependent = false);
 
 	double getPhotonDensity(double ePhoton, double z = 0.) const;
 	double getRedshiftScaling(double z) const;
@@ -286,6 +298,19 @@ class URB_Nitu21: public TabularPhotonField {
 public:
 	URB_Nitu21() : TabularPhotonField("URB_Nitu21", false) {}
 };
+
+/**
+ @class AGN_Corona_Field
+ @brief Photon field model for AGN corona+accretion disk from NGC 1068
+ */
+class AGN_Corona_Field: public TabularPhotonField {
+	public:
+		AGN_Corona_Field(double R0);
+		double getSpaceScaling(Vector3d pos = Vector3d(0, 0, 0)) const;
+	protected:
+		double R0 = 1e-4 * pc;
+	};
+	
 
 /**
  @class BlackbodyPhotonField

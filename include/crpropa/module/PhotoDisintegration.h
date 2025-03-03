@@ -3,6 +3,7 @@
 
 #include "crpropa/Module.h"
 #include "crpropa/PhotonBackground.h"
+#include "crpropa/Vector3.h"
 
 #include <vector>
 #include <map>
@@ -80,9 +81,10 @@ public:
 	 @param	id		PDG particle id
 	 @param gamma	Lorentz factor of particle
 	 @param z		redshift
+	 @param pos	position of particle
 	 @returns E dx/dE [in meters]
 	 */
-	double lossLength(int id, double gamma, double z = 0);
+	double lossLength(int id, double gamma, double z = 0, Vector3d pos = Vector3d(0, 0, 0)) const;
 };
 
 /** @}*/

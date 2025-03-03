@@ -227,6 +227,7 @@ void EMPairProduction::process(Candidate *candidate) const {
 
 	// scale particle energy instead of background photon energy
 	double z = candidate->getRedshift();
+	Vector3d pos = candidate->current.getPosition();
 	double E = candidate->current.getEnergy() * (1 + z);
 
 	// check if in tabulated energy range
@@ -235,7 +236,7 @@ void EMPairProduction::process(Candidate *candidate) const {
 
 	// interaction rate
 	double rate = interpolate(E, tabEnergy, tabRate);
-	rate *= pow_integer<2>(1 + z) * photonField->getRedshiftScaling(z);
+	rate *= pow_integer<2>(1 + z) * photonField->getRedshiftScaling(z) * photonField->getSpaceScaling(pos);
 
 	// run this loop at least once to limit the step size 
 	double step = candidate->getCurrentStep();

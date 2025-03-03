@@ -151,6 +151,7 @@ void EMTripletPairProduction::process(Candidate *candidate) const {
 
 	// scale the particle energy instead of background photons
 	double z = candidate->getRedshift();
+	Vector3d pos = candidate->current.getPosition();
 	double E = (1 + z) * candidate->current.getEnergy();
 
 	// check if in tabulated energy range
@@ -158,7 +159,7 @@ void EMTripletPairProduction::process(Candidate *candidate) const {
 		return;
 
 	// cosmological scaling of interaction distance (comoving)
-	double scaling = pow_integer<2>(1 + z) * photonField->getRedshiftScaling(z);
+	double scaling = pow_integer<2>(1 + z) * photonField->getRedshiftScaling(z) * photonField->getSpaceScaling(pos);
 	double rate = scaling * interpolate(E, tabEnergy, tabRate);
 
 	// run this loop at least once to limit the step size

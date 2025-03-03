@@ -11,16 +11,17 @@
 
 namespace crpropa {
 
-TabularPhotonField::TabularPhotonField(std::string fieldName, bool isRedshiftDependent) {
+TabularPhotonField::TabularPhotonField(std::string fieldName, bool isRedshiftDependent, bool isSpaceDependent) {
 	this->fieldName = fieldName;
 	this->isRedshiftDependent = isRedshiftDependent;
+	this->isSpaceDependent = isSpaceDependent;
 
 	readPhotonEnergy(getDataPath("") + "Scaling/" + this->fieldName + "_photonEnergy.txt");
 	readPhotonDensity(getDataPath("") + "Scaling/" + this->fieldName + "_photonDensity.txt");
 	if (this->isRedshiftDependent)
 		readRedshift(getDataPath("") + "Scaling/" + this->fieldName + "_redshift.txt");
-
-	checkInputData();
+		
+		checkInputData();
 
 	if (this->isRedshiftDependent)
 		initRedshiftScaling();
@@ -168,6 +169,18 @@ void TabularPhotonField::checkInputData() const {
 				throw std::runtime_error("TabularPhotonField::checkInputData: initRedshiftScaling has created a non-positive scaling factor");
 		}
 	}
+}
+
+AGN_Corona_Field::AGN_Corona_Field(double R0) : TabularPhotonField("PF5", false, true), R0(R0) {
+	this->R0 = R0;
+}
+
+double AGN_Corona_Field::getSpaceScaling(Vector3d pos) const {
+	double R = pos.getR();
+	if (R < this->R0)
+		return 1.;
+	else
+		return this->R0 / R;
 }
 
 BlackbodyPhotonField::BlackbodyPhotonField(std::string fieldName, double blackbodyTemperature) {
