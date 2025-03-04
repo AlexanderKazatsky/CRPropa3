@@ -143,6 +143,18 @@ public:
 	Vector3d getField(const Vector3d &position) const;
 };
 
+class CoronaMagneticField: public MagneticField {
+	private:
+		ref_ptr<MagneticField> field;
+		double R0 = 1e-4 * pc;
+
+		bool hasScaling = true; // if true, the field strength is scaled with the distance from the center
+	public:
+		CoronaMagneticField(ref_ptr<MagneticField> field, const double R0 = 1e-4 * pc, const bool hasScaling = true);
+		Vector3d getField(const Vector3d &position, const double z = 0) const;
+		double getSpaceScaling(const Vector3d &position = Vector3d(0, 0, 0)) const;
+};
+
 #ifdef CRPROPA_HAVE_MUPARSER
 /**
  @class RenormalizeMagneticField
