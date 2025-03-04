@@ -195,6 +195,45 @@ std::string SphericalBoundary::getDescription() const {
 	return s.str();
 }
 
+InnerSphericalBoundary::InnerSphericalBoundary() :
+		center(Vector3d(0, 0, 0)), radius(0), limitStep(true), margin(0.1 * kpc) {
+}
+
+InnerSphericalBoundary::InnerSphericalBoundary(Vector3d c, double r) :
+		center(c), radius(r), limitStep(true), margin(0.1 * kpc) {
+}
+
+void InnerSphericalBoundary::process(Candidate *c) const {
+	double d = (c->current.getPosition() - center).getR();
+	if (d <= radius) {
+		reject(c);
+	}
+}
+
+void InnerSphericalBoundary::setCenter(Vector3d c) {
+	center = c;
+}
+void InnerSphericalBoundary::setRadius(double r) {
+	radius = r;
+}
+void InnerSphericalBoundary::setMargin(double m) {
+	margin = m;
+}
+void InnerSphericalBoundary::setLimitStep(bool b) {
+	limitStep = b;
+}
+
+std::string InnerSphericalBoundary::getDescription() const {
+	std::stringstream s;
+	s << "Inner Spherical Boundary: radius " << radius / Mpc << " Mpc, ";
+	s << "around " << center / Mpc << " Mpc, ";
+	s << "Flag: '" << rejectFlagKey << "' -> '" << rejectFlagValue << "', ";
+	s << "MakeInactive: " << (makeRejectedInactive ? "yes" : "no");
+	if (rejectAction.valid())
+		s << ", Action: " << rejectAction->getDescription();
+	return s.str();
+}
+
 EllipsoidalBoundary::EllipsoidalBoundary() :
 		focalPoint1(Vector3d(0, 0, 0)), focalPoint2(Vector3d(0, 0, 0)),
 		majorAxis(0), limitStep(true), margin(0.1 * kpc) {

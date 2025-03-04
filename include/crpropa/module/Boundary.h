@@ -130,6 +130,38 @@ public:
 };
 
 /**
+ @class InnerSphericalBoundary
+ @brief Flag a particle when leaving the sphere.
+
+ The particle is made inactive and flagged as "Rejected".
+ By default the module prevents overshooting the boundary by more than a margin of 0.1 kpc.
+ This corresponds to the default minimum step size of the propagation modules (PropagationCK and SimplePropagation).
+ */
+class InnerSphericalBoundary: public AbstractCondition {
+	private:
+		Vector3d center;
+		double radius;
+		double margin;
+		bool limitStep;
+	
+	public:
+		/** Default constructor
+		 */
+		InnerSphericalBoundary();
+		/** Constructor
+		 @param center		vector containing the coordinates of the center of the sphere
+		 @param radius		radius of the sphere
+		 */
+		InnerSphericalBoundary(Vector3d center, double radius);
+		void process(Candidate *candidate) const;
+		void setCenter(Vector3d center);
+		void setRadius(double size);
+		void setMargin(double margin);
+		void setLimitStep(bool limitStep);
+		std::string getDescription() const;
+	};
+
+/**
  @class EllipsoidalBoundary
  @brief Flags a particle when leaving the ellipsoid.
 
