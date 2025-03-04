@@ -175,7 +175,7 @@ AGN_Corona_Field::AGN_Corona_Field(double R0) : TabularPhotonField("PF5", false,
 	this->R0 = R0;
 }
 
-double AGN_Corona_Field::getSpaceScaling(Vector3d pos) const {
+double AGN_Corona_Field::getSpaceScaling(const Vector3d &pos) const {
 	double R = pos.getR();
 	if (R < this->R0)
 		return 1.;
