@@ -100,7 +100,7 @@ double CoronaMagneticField::getSpaceScaling(const Vector3d &pos) const {
 	if (R < R0) {
 		return 1;
 	}
-	return R0 / R;
+	return pow(R0 / R, 2);
 }
 
 Vector3d CoronaMagneticField::getField(const Vector3d &position, const double z) const {

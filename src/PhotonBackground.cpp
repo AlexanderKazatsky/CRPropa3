@@ -180,7 +180,7 @@ double AGN_Corona_Field::getSpaceScaling(const Vector3d &pos) const {
 	if (R < this->R0)
 		return 1.;
 	else
-		return this->R0 / R;
+		return pow(this->R0 / R, 2);
 }
 
 BlackbodyPhotonField::BlackbodyPhotonField(std::string fieldName, double blackbodyTemperature) {
