@@ -171,16 +171,14 @@ void TabularPhotonField::checkInputData() const {
 	}
 }
 
-AGN_Corona_Field::AGN_Corona_Field(double R0) : TabularPhotonField("PF5", false, true), R0(R0) {
+AGN_Corona_Field::AGN_Corona_Field(double R0, double alpha) : TabularPhotonField("PF5", false, true), R0(R0) {
 	this->R0 = R0;
+	this->alpha = alpha;
 }
 
 double AGN_Corona_Field::getSpaceScaling(const Vector3d &pos) const {
 	double R = pos.getR();
-	if (R < this->R0)
-		return 1.;
-	else
-		return pow(this->R0 / R, 2);
+	return 1 / (1 + pow(R / R0, alpha));
 }
 
 BlackbodyPhotonField::BlackbodyPhotonField(std::string fieldName, double blackbodyTemperature) {

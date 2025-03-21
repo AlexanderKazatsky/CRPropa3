@@ -134,4 +134,40 @@ std::string ConstantDensity::getDescription() {
 	return s.str();
 }
 
+SpatialDependentDensity::SpatialDependentDensity(double HI, double HII, double H2, double alpha, double n0, double r0) {
+	this->HI = HI;
+	this->HII = HII;
+	this->H2 = H2;
+
+	this->alpha = alpha;
+	this->n0 = n0;
+	this->r0 = r0;
+}
+
+double SpatialDependentDensity::getDensity(const Vector3d &position) const {
+	double r = position.getR();
+	double n = 0;
+
+	n += HI;
+	n += HII;
+	n += H2;
+
+		return n * getSpaceScaling(r);
+}
+
+double SpatialDependentDensity::getNucleonDensity(const Vector3d &position) const {
+	double r = position.getR();
+	double n = 0;
+
+	n += HI;
+	n += HII;
+	n += 2 * H2;
+
+	return n * getSpaceScaling(r);
+}
+
+double SpatialDependentDensity::getSpaceScaling(const double r) const {
+	return 1 / (1 + pow(r / r0, alpha));
+}
+
 }  // namespace crpropa

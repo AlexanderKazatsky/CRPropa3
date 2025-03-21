@@ -116,6 +116,24 @@ public:
 	std::string getDescription();
 };
 
+class SpatialDependentDensity: public Density {
+	private:
+		double HI = 0;
+		double HII = 0;
+		double H2 = 0;
+
+		double alpha = 0;
+		double n0 = 0;
+		double r0 = 10 * parsec; // pc
+
+	public:
+		SpatialDependentDensity(double HI, double HII, double H2, double alpha, double n0, double r0);
+		double getDensity(const Vector3d &position) const;
+		double getNucleonDensity(const Vector3d &position) const;
+		
+		double getSpaceScaling(const double r) const;
+};
+
 }  // namespace crpropa
 
 #endif  // CRPROPA_CONSTANTDENSITY_H

@@ -88,19 +88,15 @@ Vector3d MagneticDipoleField::getField(const Vector3d &position) const {
 		return (unit_r * (unit_r.dot(moment)) * 3 - moment) / pow(r.getR() / radius, 3) * mu0 / (4*M_PI);
 }
 
-CoronaMagneticField::CoronaMagneticField(ref_ptr<MagneticField> field, const double R0, const bool hasScaling) : field(field) {
+CoronaMagneticField::CoronaMagneticField(ref_ptr<MagneticField> field, const double R0, const double alpha, const bool hasScaling) : field(field) {
 	this->R0 = R0;
+	this->alpha = alpha;
 	this->hasScaling = hasScaling;
 }
 
 double CoronaMagneticField::getSpaceScaling(const Vector3d &pos) const {
 	double R = pos.getR();
-	if (not hasScaling)
-		return 1;
-	if (R < R0) {
-		return 1;
-	}
-	return pow(R0 / R, 2);
+	return 1 / (1 + pow(R / R0, alpha));
 }
 
 Vector3d CoronaMagneticField::getField(const Vector3d &position, const double z) const {

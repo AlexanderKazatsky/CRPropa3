@@ -305,10 +305,11 @@ public:
  */
 class AGN_Corona_Field: public TabularPhotonField {
 	public:
-		AGN_Corona_Field(double R0);
+		AGN_Corona_Field(double R0, double alpha);
 		double getSpaceScaling(const Vector3d &pos = Vector3d(0, 0, 0)) const;
 	protected:
 		double R0 = 1e-4 * pc;
+		double alpha = 0.; // scaling exponent
 	};
 	
 
